@@ -1,6 +1,6 @@
 from recommenders import data_movies, default_poster_url
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
+from sklearn.metrics.pairwise import linear_kernel,cosine_similarity
 import pandas as pd
 import numpy as np
 from fuzzywuzzy import fuzz
@@ -60,11 +60,11 @@ def content_based_recommendation(movie):
 
 
     # create an object for TfidfVectorizer: tfidf_vector
-    tfidf_vector = None
+    tfidf_vector = TfidfVectorizer()
     # apply the object to the genres column: tfidf_matrix
-    tfidf_matrix = None
+    tfidf_matrix = tfidf_vector.fit_transform(movies['genres'])
     # create the cosine similarity matrix: sim_matrix
-    sim_matrix = None
+    sim_matrix =  cosine_similarity(tfidf_matrix, tfidf_matrix)
     ############################################################################################
     # a function to convert index to title_year
     def get_title_year_from_index(index):
