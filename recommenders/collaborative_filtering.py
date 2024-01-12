@@ -54,7 +54,7 @@ def collaborative_recommendation(movie):
     # Building the model
     model_knn= NearestNeighbors(n_neighbors=3,algorithm='ball_tree')
     # Fitting the model 
-    model_knn.fit_transform(movies_df,movies_df)
+    model_knn.fit(movies_df,movies_df)
     ##########################################################################################################################################################
 
 
