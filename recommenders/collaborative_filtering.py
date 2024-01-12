@@ -46,14 +46,15 @@ def collaborative_recommendation(movie):
     '''
 
     # Combining the data on same column: data_ratings and movies using pivot table => movies_df
-    movies_df= None
+    movies=pd.merge(movies,data_ratings,on='movieId')
+    movies_df=pd.pivot_table(movies,index='title',columns='userId',values='rating')
+    movies_df=movies_df.fillna(0)
     # Now converting into metrix
-    movies_df_metrix= None
+    movies_df_metrix= csr_matrix(movies_df)
     # Building the model
-    model_knn= None
-
+    model_knn= NearestNeighbors(n_neighbors=3,algorithm='ball_tree')
     # Fitting the model 
-    
+    model_knn.fit(movies_df,movies_df)
     ##########################################################################################################################################################
 
 
@@ -68,7 +69,7 @@ def collaborative_recommendation(movie):
     response = []
     for i in range(0, len(sorted_distances)):
         if i == 0:
-            #print('Recommendations for {0}:\n'.format(movies_df.index[index_value])) # For which movies it selected
+            print('Recommendations for {0}:\n'.format(movies_df.index[index_value])) # For which movies it selected
             pass
         else:
             title = movies_df.index[sorted_neighbor_indices[i]]
@@ -81,6 +82,6 @@ def collaborative_recommendation(movie):
                                     "genres": str(movie_record.genres).split("|")
                                 })
 
-            #print('{0}: {1}, with distance of {2}:'.format(i, movies_df.index[sorted_neighbor_indices[i]], sorted_distances[i]))
+            print('{0}: {1}, with distance of {2}:'.format(i, movies_df.index[sorted_neighbor_indices[i]], sorted_distances[i]))
 
     return {"status": True, "data": {"message": title_string, "results": response}}
